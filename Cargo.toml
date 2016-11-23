@@ -1,0 +1,9 @@
+[package]
+name = "bearychat-rs"
+version = "0.1.0"
+authors = ["shonenada <shonenada@gmail.com>"]
+
+
+[dependencies]
+rustc-serialize = "0.3"
+hyper = "0.9"
