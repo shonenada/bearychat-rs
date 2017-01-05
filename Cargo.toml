@@ -1,9 +1,12 @@
 [package]
-name = "bearychat-rs"
+name = "bearychat"
 version = "0.1.0"
 authors = ["shonenada <shonenada@gmail.com>"]
-
 
 [dependencies]
 rustc-serialize = "0.3"
 hyper = "0.9"
+ws = "*"
+serde = "0.8.21"
+json = "*"
+chrono = { version = "0.2", features = ["rustc-serialize"] }
