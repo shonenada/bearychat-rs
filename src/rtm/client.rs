@@ -1,6 +1,5 @@
 use std::io::Read;
 
-use ws::{Sender};
 use rtm::utils::{http_get, parse_json};
 use rtm::data_structure::{Team, User, Channel};
 
@@ -8,7 +7,6 @@ static BASE_URL: &'static str = "https://rtm.bearychat.com/v1";
 
 pub struct RTMClient {
     pub token: String,
-    pub client: Option<Sender>,
 }
 
 impl RTMClient {
@@ -92,17 +90,5 @@ impl RTMClient {
                 panic!("Failed to get team channels. {}", e);
             }
         }
-    }
-
-    fn get_user(&self, uid: i32) {
-    }
-
-    fn get_channel(&self, channel_id: i32) {
-    }
-
-    fn send_message(&self, message: String) {
-    }
-
-    fn start(&self) {
     }
 }
