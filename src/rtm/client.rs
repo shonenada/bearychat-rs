@@ -1,5 +1,6 @@
 use std::io::Read;
 
+use error::Error;
 use rtm::utils::{http_get, parse_json};
 use rtm::data_structure::{Team, User, Channel};
 
@@ -10,19 +11,19 @@ pub struct RTMClient {
 }
 
 impl RTMClient {
-    pub fn team(&self) -> Option<Team> {
+    pub fn team(&self) -> Result<Team, Error> {
         let url = format!("{}{}?token={}", BASE_URL, "/current_team.info", self.token);
-        let mut resp = http_get(url.as_str()).unwrap();
+        let mut resp = try!(http_get(url.as_str()));
         let mut buffer = String::new();
         resp.read_to_string(&mut buffer);
-        let team_data= parse_json(buffer);
+        let team_data = parse_json(buffer);
         match team_data {
             Ok(data) => {
                 let code = data["code"].as_i32().unwrap();
                 if code == 0 {
                     let team_data = data["result"].clone();
                     let team = Team::parse_from_json(team_data);
-                    return Some(team)
+                    return Ok(team)
                 } else {
                     let error = data["error"].clone();
                     panic!("Failed to get team. {}", error);
@@ -34,9 +35,9 @@ impl RTMClient {
         }
     }
 
-    pub fn members(&self) -> Option<Vec<User>> {
+    pub fn members(&self) -> Result<Vec<User>, Error> {
         let url = format!("{}{}?token={}", BASE_URL, "/current_team.members", self.token);
-        let mut resp = http_get(url.as_str()).unwrap();
+        let mut resp = try!(http_get(url.as_str()));
         let mut buffer = String::new();
         resp.read_to_string(&mut buffer);
         let members_data = parse_json(buffer);
@@ -51,7 +52,7 @@ impl RTMClient {
                         let obj = User::parse_from_json(rv[i].take());
                         members.push(obj);
                     }
-                    return Some(members)
+                    return Ok(members)
                 } else {
                     let error = data["error"].clone();
                     panic!("Failed to get members. {}", error);
@@ -63,9 +64,9 @@ impl RTMClient {
         }
     }
 
-    pub fn channels(&self) -> Option<Vec<Channel>> {
+    pub fn channels(&self) -> Result<Vec<Channel>, Error> {
         let url = format!("{}{}?token={}", BASE_URL, "/current_team.channels", self.token);
-        let mut resp = http_get(url.as_str()).unwrap();
+        let mut resp = try!(http_get(url.as_str()));
         let mut buffer = String::new();
         resp.read_to_string(&mut buffer);
         let channels_data = parse_json(buffer);
@@ -80,7 +81,7 @@ impl RTMClient {
                         let obj = Channel::parse_from_json(rv[i].take());
                         channels.push(obj);
                     }
-                    return Some(channels)
+                    return Ok(channels)
                 } else {
                     let error = data["error"].clone();
                     panic!("Failed to get channels. {}", error);

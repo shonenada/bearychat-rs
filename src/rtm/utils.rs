@@ -1,5 +1,5 @@
 use std::io::Read;
-use json::{Error as JError, JsonValue, parse};
+use json::{JsonValue, parse, Error as JError};
 use hyper::{Client, Error as HError};
 use hyper::client::response::{Response};
 use hyper::header::{ContentType};
@@ -8,8 +8,7 @@ static RTM_URL: &'static str = "https://rtm.bearychat.com/start";
 
 pub fn http_get(url: &str) -> Result<Response, HError> {
     let client = Client::new();
-    let resp = client.get(url).send();
-    resp
+    client.get(url).send()
 }
 
 pub fn parse_json(json_string: String) -> Result<JsonValue, JError> {
